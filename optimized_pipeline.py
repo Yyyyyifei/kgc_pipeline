@@ -128,8 +128,7 @@ def flatten_query(queries):
 def forward(hard_answer, easy_answer, q):
     hard_answer = {int(ele) for ele in hard_answer}
     easy_answer = {int(ele) for ele in easy_answer}
-
-    breakpoint()
+    
     probs, indices = pipeline.get_prob(q, easy_answer)
 
     num_valid = torch.sum(torch.isin(torch.tensor(list(hard_answer)).to(device), indices).long())
