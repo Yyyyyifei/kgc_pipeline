@@ -128,7 +128,7 @@ def flatten_query(queries):
 def forward(hard_answer, easy_answer, q):
     hard_answer = {int(ele) for ele in hard_answer}
     easy_answer = {int(ele) for ele in easy_answer}
-    
+
     probs, indices = pipeline.get_prob(q, easy_answer)
 
     num_valid = torch.sum(torch.isin(torch.tensor(list(hard_answer)).to(device), indices).long())
@@ -163,6 +163,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", dest="num_results", type=int, default=20, help="Number of answer logged")
     parser.add_argument("-p", dest="data_path", type=str, default="./data/kgc_data", help="path where data is stored")
     parser.add_argument("-b", dest="batch_size", type=int, default=512, help="batch size of entities")
+    parser.add_argument("-m", dest="model_path", type=str, default="meta-llama/Meta-Llama-3-8B-Instruct", help="Specify which model to run with")
     parser.add_argument("--quant", action="store_true", help="Use 8-bit quantization")
     
     args = parser.parse_args()
@@ -191,7 +192,7 @@ if __name__ == "__main__":
             device_map="auto"
         )
     else: 
-        model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+        model_id = args.model_path
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             torch_dtype=torch.bfloat16,
